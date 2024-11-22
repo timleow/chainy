@@ -1,16 +1,14 @@
-# groq==0.4.2
-python-dotenv==1.0.1
+groq==0.4.2
+python-dotenv
 
 langchain-groq
 langchain
 langchain_community
 sentence_transformers
-
-chainlit
-
-# chainlit==1.0.401
-
 chromadb
 tiktoken
 pymupdf
+
+chainlit
+
 

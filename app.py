@@ -31,11 +31,10 @@ embeddings_model = HuggingFaceBgeEmbeddings(
 )
 
 PDF_STORAGE_PATH = "./pdfs"
-
+chainlit_md_path  = Path(__file__).parent / "chainlit.md"
+WELCOME_MESSAGE = chainlit_md_path.read_text()
 
 def process_pdfs(pdf_storage_path: str):
-    
-    
     pdf_directory = Path(pdf_storage_path)
     docs = []  # type: List[Document]
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
@@ -67,17 +66,7 @@ def process_pdfs(pdf_storage_path: str):
 
 @cl.on_chat_start
 async def on_chat_start():
-    root_path  = Path(__file__).parent
-    
-    # translated_chainlit_md_path = root_path / f"chainlit_{language}.md"
-    default_chainlit_md_path = root_path / "chainlit.md"
-    # if translated_chainlit_md_path.exists():
-    #     message = translated_chainlit_md_path.read_text()
-    # else:
-    message = default_chainlit_md_path.read_text()
-    startup_message = cl.Message(content=message)
-    await startup_message.send()
-
+    await cl.Message(content=WELCOME_MESSAGE).send()
 
     doc_search = process_pdfs(PDF_STORAGE_PATH)
 
@@ -86,8 +75,10 @@ async def on_chat_start():
         [
             (
                 "system",
-                '''You're an AI assistant to answer questions about Timothy Leow, a software engineer.
+                '''You're Chainy, an AI assistant to answer questions about Timothy Leow, a software engineer.
                 Answer only based the context provided below, and do not provide any information that is not in the context.
+                If the question is not answerable based on the context, simply say "I'm sorry, but I can't answer that.".
+                Do not speak like you are referring to a context, just answer the question directly.
                 \n\n
                 {context}''',
             ),
@@ -127,12 +118,13 @@ async def on_message(message: cl.Message):
 
         def on_retriever_end(self, documents, *, run_id, parent_run_id, **kwargs):
             for d in documents:
-                source_page_pair = (d.metadata['source'], d.metadata['page'])
+                source = d.metadata['source'].split('/')[-1]
+                source_page_pair = (source, d.metadata['page'])
                 self.sources.add(source_page_pair)  # Add unique pairs to the set
 
         def on_llm_end(self, response, *, run_id, parent_run_id, **kwargs):
             if len(self.sources):
-                sources_text = "\n".join([f"{source}#page={page}" for source, page in self.sources])
+                sources_text = "\n".join([f"[{source}](https://github.com/timleow/chainy/pdfs/{source}) (page={page})" for source, page in self.sources])
                 self.msg.elements.append(
                     cl.Text(name="Sources", content=sources_text, display="inline")
                 )
