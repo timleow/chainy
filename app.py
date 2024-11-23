@@ -1,72 +1,44 @@
-from typing import List
-from pathlib import Path
-
 from langchain_groq import ChatGroq
-from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.schema import StrOutputParser
 from langchain.schema.runnable import Runnable, RunnablePassthrough, RunnableConfig
 
 from langchain.prompts import ChatPromptTemplate
 from langchain.schema import StrOutputParser
-from langchain_community.document_loaders import (
-    PyMuPDFLoader,
-)
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import Chroma
-from langchain.indexes import SQLRecordManager, index
-from langchain.schema import Document
+
 from langchain.callbacks.base import BaseCallbackHandler
 
 import chainlit as cl
+from utils import process_pdfs, PDF_STORAGE_PATH, WELCOME_MESSAGE
 
-chunk_size = 1024
-chunk_overlap = 50
+@cl.set_starters
+async def set_starters():
+    return [
+        cl.Starter(
+            label="Chainy's introduction!",
+            message="Hey, what can you do?",
+            icon="/public/intro.svg",
+            ),
+        cl.Starter(
+            label="Tim's introduction",
+            message="Tell me about Tim!",
+            icon="/public/tim.svg",
+            ),
+        cl.Starter(
+            label="Tim as a Software Engineer",
+            message="Tell me about Tim as a software engineer.",
+            icon="/public/com.svg",
+            ),
 
-model_name = "BAAI/bge-small-en"
-model_kwargs = {"device": "cpu"}
-encode_kwargs = {"normalize_embeddings": True}
-embeddings_model = HuggingFaceBgeEmbeddings(
-    model_name=model_name, model_kwargs=model_kwargs, encode_kwargs=encode_kwargs
-)
-
-PDF_STORAGE_PATH = "./pdfs"
-chainlit_md_path  = Path(__file__).parent / "chainlit.md"
-WELCOME_MESSAGE = chainlit_md_path.read_text()
-
-def process_pdfs(pdf_storage_path: str):
-    pdf_directory = Path(pdf_storage_path)
-    docs = []  # type: List[Document]
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
-
-    for pdf_path in pdf_directory.glob("*.pdf"):
-        loader = PyMuPDFLoader(str(pdf_path))
-        documents = loader.load()
-        docs += text_splitter.split_documents(documents)
-
-    doc_search = Chroma.from_documents(docs, embeddings_model)
-
-    namespace = "chromadb/my_documents"
-    record_manager = SQLRecordManager(
-        namespace, db_url="sqlite:///record_manager_cache.sql"
-    )
-    record_manager.create_schema()
-
-    index_result = index(
-        docs,
-        record_manager,
-        doc_search,
-        cleanup="incremental",
-        source_id_key="source",
-    )
-
-    print(f"Indexing stats: {index_result}")
-
-    return doc_search
+        cl.Starter(
+            label="Tim's jazz endeavours",
+            message="What has Tim achieved in jazz?",
+            icon="/public/sax.svg",
+            ),
+        ]
 
 @cl.on_chat_start
 async def on_chat_start():
-    await cl.Message(content=WELCOME_MESSAGE).send()
 
     doc_search = process_pdfs(PDF_STORAGE_PATH)
 
@@ -75,7 +47,7 @@ async def on_chat_start():
         [
             (
                 "system",
-                '''You're Chainy, an AI assistant to answer questions about Timothy Leow, a software engineer.
+                '''You're Chainy, an AI assistant to answer questions about Timothy Leow, a software engineer who also loves jazz.
                 Answer only based the context provided below, and do not provide any information that is not in the context.
                 If the question is not answerable based on the context, simply say "I'm sorry, but I can't answer that.".
                 Do not speak like you are referring to a context, just answer the question directly.
@@ -88,7 +60,7 @@ async def on_chat_start():
     def format_docs(docs):
         return "\n\n".join([d.page_content for d in docs])
 
-    retriever = doc_search.as_retriever()
+    retriever = doc_search.as_retriever(search_kwargs={"k": 20})
 
     runnable = (
         {"context": retriever | format_docs, "question": RunnablePassthrough()}
@@ -102,6 +74,11 @@ async def on_chat_start():
 
 @cl.on_message
 async def on_message(message: cl.Message):
+    # SPECIAL CASE for starter message in chainlit.md
+    if message.content == "Hey, what can you do?":
+        await cl.Message(content=WELCOME_MESSAGE).send()
+        return
+
     runnable = cl.user_session.get("runnable")  # type: Runnable
     msg = cl.Message(content="")
 
@@ -124,7 +101,7 @@ async def on_message(message: cl.Message):
 
         def on_llm_end(self, response, *, run_id, parent_run_id, **kwargs):
             if len(self.sources):
-                sources_text = "\n".join([f"[{source}](https://github.com/timleow/chainy/pdfs/{source}) (page={page})" for source, page in self.sources])
+                sources_text = "\n".join([f"[{source}](https://github.com/timleow/chainy/blob/main/pdfs/{source}), page {page+1}" for source, page in self.sources])
                 self.msg.elements.append(
                     cl.Text(name="Sources", content=sources_text, display="inline")
                 )
