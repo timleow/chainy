@@ -3,7 +3,7 @@
 
 ![Chainy Logo](public/logo_light.png)
 
-Welcome to Chainy, a cool personal chatbot built using Retrieval-Augmented Generation (RAG)! Chainy is here to answer all your non-personal questions about me with a mix of retrieval and generative magic. It lives in my [portfolio page](https://timleow.netlify.app/), but also has its own home [here](test.com).
+Welcome to Chainy, a cool personal chatbot built using Retrieval-Augmented Generation (RAG)! Chainy is here to answer all your non-personal questions about me with a mix of retrieval and generative magic. It lives in my [portfolio page](https://timleow.netlify.app/), but also has its own home [here](https://chainy--gicaz7n.wittyforest-a9618fd9.southeastasia.azurecontainerapps.io/).
 
 ## Features
 
@@ -20,11 +20,4 @@ I was built with RAG (Retrieval-Augmented Generation) using the fun tools below:
 -  [🦜🔗 LangChain](https://langchain.com)
 - [Chainlit](https://chainlit.io)
 - [ChromaDB](https://chroma.io).
-
-
-
-## What You Need
-
-- Python 3.x
-- Libraries listed in `requirements.txt`
 

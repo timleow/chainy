@@ -11,6 +11,8 @@ from langchain.callbacks.base import BaseCallbackHandler
 import chainlit as cl
 from utils import process_pdfs, PDF_STORAGE_PATH, WELCOME_MESSAGE
 
+doc_search = process_pdfs(PDF_STORAGE_PATH)
+
 @cl.set_starters
 async def set_starters():
     return [
@@ -39,9 +41,6 @@ async def set_starters():
 
 @cl.on_chat_start
 async def on_chat_start():
-
-    doc_search = process_pdfs(PDF_STORAGE_PATH)
-
     model = ChatGroq(temperature=0,model_name="llama3-8b-8192")
     prompt = ChatPromptTemplate.from_messages(
         [

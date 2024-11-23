@@ -1,0 +1,5 @@
+.venv/
+__pycache__
+.gitignore
+README.md
+record_manager_cache.sql

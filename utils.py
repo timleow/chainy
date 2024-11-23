@@ -7,7 +7,7 @@ from langchain_community.document_loaders import (
     PyMuPDFLoader,
 )
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import Chroma
+from langchain_community.vectorstores import FAISS
 from langchain.indexes import SQLRecordManager, index
 from langchain.schema import Document
 
@@ -35,9 +35,9 @@ def process_pdfs(pdf_storage_path: str):
         documents = loader.load()
         docs += text_splitter.split_documents(documents)
 
-    doc_search = Chroma.from_documents(docs, embeddings_model)
+    doc_search = FAISS.from_documents(docs, embeddings_model)
 
-    namespace = "chromadb/my_documents"
+    namespace = "db/my_documents"
     record_manager = SQLRecordManager(
         namespace, db_url="sqlite:///record_manager_cache.sql"
     )

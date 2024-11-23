@@ -5,10 +5,11 @@ langchain-groq
 langchain
 langchain_community
 sentence_transformers
-chromadb
+# chromadb
+faiss-cpu
 tiktoken
 pymupdf
 
-chainlit
+chainlit==1.1.400
 
 
