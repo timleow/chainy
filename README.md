@@ -3,21 +3,24 @@
 
 ![Chainy Logo](public/logo_light.png)
 
-Welcome to Chainy, a cool personal chatbot built using Retrieval-Augmented Generation (RAG)! Chainy is here to answer all your non-personal questions about me with a mix of retrieval and generative magic. It lives in my [portfolio page](https://timleow.netlify.app/), but also has its own home [here](https://chainy--gicaz7n.wittyforest-a9618fd9.southeastasia.azurecontainerapps.io/).
+Welcome to Chainy, a cool personal chatbot built using Retrieval-Augmented Generation (RAG)! Chainy is here to answer all your non-personal questions about me with a mix of retrieval and generative magic. It's main home is [here](https://chainy--gicaz7n.wittyforest-a9618fd9.southeastasia.azurecontainerapps.io/).
 
 ## Features
 
-- **Ask Away**: Chainy can handle a variety of non-personal questions about me that you throw at it.
-- **Smart Responses**: By retrieving pdfs in this repository about me methods, Chainy gives his best effort at answering your questions.
+- **Retrieval-Augmented Answers**: Chainy can answer most questions regarding my endeavours in school, software engineering, or jazz, and it mainly takes information from PDF documents about me that are [here](https://github.com/timleow/chainy/tree/main/pdfs).
+- **Integration with Personal Portfolio**: Chainy also lives in a chat pop-up in my [portfolio page](https://timleow.netlify.app/).
 
 ## Tech Stack
 
 Chainy is built using the following technologies:
 
-I was built with RAG (Retrieval-Augmented Generation) using the fun tools below:
+- [Groq API](https://groq.com) - LLM Inferences
+-  [🦜🔗 LangChain](https://langchain.com) - RAG Logic
+- [FAISS](https://ai.meta.com/tools/faiss/) - Vector Store
+- [Chainlit](https://chainlit.io) - FrontEnd
 
-- [Groq API (for LLM inferences)](https://groq.com)
--  [🦜🔗 LangChain](https://langchain.com)
-- [Chainlit](https://chainlit.io)
-- [ChromaDB](https://chroma.io).
+## Future Enhancements
+
+- **Agentic RAG**: Chainy shouldn't need to retrieve from the vector store for every single query. For queries that are irrelevant to its knowledge base, it should simply tell you it doesn't know. I plan to separate the vector stores for the various topics it can answer about me and have another LLM instance in the loop to route the retrieval based on the query, or simply indicate that a retrieval isn't necessary at all.
+
 
