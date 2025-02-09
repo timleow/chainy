@@ -3,12 +3,12 @@
 
 ![Chainy Logo](public/logo_light.png)
 
-Welcome to Chainy, a cool personal chatbot built using Retrieval-Augmented Generation (RAG)! Chainy is here to answer all your non-personal questions about me with a mix of retrieval and generative magic. It's main home is [here](https://chainy--gicaz7n.wittyforest-a9618fd9.southeastasia.azurecontainerapps.io/).
+Welcome to Chainy, a cool personal chatbot built using Retrieval-Augmented Generation (RAG)! Chainy is here to answer all your non-personal questions about me with a mix of retrieval and generative magic.
 
 ## Features
 
 - **Retrieval-Augmented Answers**: Chainy can answer most questions regarding my endeavours in school, software engineering, or jazz, and it mainly takes information from PDF documents about me that are [here](https://github.com/timleow/chainy/tree/main/pdfs).
-- **Integration with Personal Portfolio**: Chainy also lives in a chat pop-up in my [portfolio page](https://timleow.netlify.app/).
+- **Integration with Personal Portfolio**: [WIP] Chainy also lives in a chat pop-up in my [portfolio page](https://timleow.netlify.app/).
 
 ## Tech Stack
 
