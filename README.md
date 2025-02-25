@@ -8,7 +8,7 @@ Welcome to Chainy, a cool personal chatbot built using Retrieval-Augmented Gener
 ## Features
 
 - **Retrieval-Augmented Answers**: Chainy can answer most questions regarding my endeavours in school, software engineering, or jazz, and it mainly takes information from PDF documents about me that are [here](https://github.com/timleow/chainy/tree/main/pdfs).
-- **Integration with Personal Portfolio**: Chainy has its own home [here](https://chainy.calmdesert-27bbb944.australiaeast.azurecontainerapps.io/), but also lives in a chat pop-up in my [portfolio page](https://timleow.netlify.app/).
+- **Integration with Personal Portfolio**: Chainy lives in a chat pop-up in my [portfolio page](https://timleow.netlify.app/). (You can find its own link there too)
 
 ## Tech Stack
 
